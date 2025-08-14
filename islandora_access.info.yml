@@ -1,0 +1,7 @@
+name: 'Islandora Access'
+type: module
+description: 'Assign administrators to parent items to easily assign editors to islandora objects'
+package: 'Islandora'
+core_version_requirement: ^11.1
+depenencies:
+  - drupal:node

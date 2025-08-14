@@ -1,0 +1,5 @@
+services:
+  islandora_access.admin_view_route_subscriber:
+    class: Drupal\islandora_access\EventSubscriber\AdminViewsRouteSubscriber
+    tags:
+      - { name: event_subscriber }
