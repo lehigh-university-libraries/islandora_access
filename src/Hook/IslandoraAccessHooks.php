@@ -26,7 +26,8 @@ class IslandoraAccessHooks {
     $grants[] = [
       'realm' => "islandora_access_admin",
       'gid' => $node->id(),
-      'grant_view' => 1,
+      // Only override view grants for unpublished nodes.
+      'grant_view' => $node->isPublished() ? 0 : 1,
       'grant_update' => 1,
       'grant_delete' => 1,
       'priority' => 0,
