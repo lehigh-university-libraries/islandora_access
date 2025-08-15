@@ -67,7 +67,7 @@ function islandora_access_node_is_collection(int $nid, bool $includeCompoundObje
     return FALSE;
   }
 
-  if ($model_uri === 'http://purl.org/dc/dcmitype/Collection') {
+  if (in_array($model_uri, ['http://purl.org/dc/dcmitype/Collection', 'https://schema.org/Book'])) {
     return TRUE;
   }
 
