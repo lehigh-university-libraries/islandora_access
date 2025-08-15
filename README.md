@@ -6,6 +6,8 @@ Assign administrators to parent items to easily assign view, update, and delete 
 
 Requires a field `field_administrator` attached to a node that points to user entities. When editing a node in Islandora, if you reference a user account with the `field_administrator` on the node, that account will be able to view, update, and delete that node, and any children nodes that reference that node with `field_member_of`.
 
+This module also allows all published nodes to be viewable by anonymous users.
+
 Node administrators are then also able to create, update, and delete media for the node(s) the user is an administator of.
 
 ## Requirements
