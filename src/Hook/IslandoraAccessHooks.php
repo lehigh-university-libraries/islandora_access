@@ -19,15 +19,25 @@ class IslandoraAccessHooks {
   #[Hook('node_access_records')]
   public function nodeAccessRecords(NodeInterface $node): array {
     $grants = [];
-    if (!$node->hasField('field_administrator')) {
+    if ($node->isPublished()) {
+      $grants[] = [
+        'realm' => 'islandora_access_view_published',
+        'gid' => 0,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+      ];
+    }
+
+    // If no one is an admin, no need to set any additional grants.
+    if (!$node->hasField('field_administrator') || $node->field_administrator->isEmpty()) {
       return $grants;
     }
 
     $grants[] = [
       'realm' => "islandora_access_admin",
       'gid' => $node->id(),
-      // Only override view grants for unpublished nodes.
-      'grant_view' => $node->isPublished() ? 0 : 1,
+      'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,
       'priority' => 0,
@@ -41,11 +51,17 @@ class IslandoraAccessHooks {
    */
   #[Hook('node_grants')]
   public function nodeGrants(AccountInterface $account, $op): array {
+    $grants = [
+      'islandora_access_view_published' => [0],
+    ];
+
+    if ($account->isAnonymous()) {
+      return $grants;
+    }
+
     $nids = [];
     islandora_access_get_admins_nids($account->id(), $nids);
-    $grants = [
-      'islandora_access_admin' => array_keys($nids),
-    ];
+    $grants['islandora_access_admin'] = array_keys($nids);
 
     return $grants;
   }

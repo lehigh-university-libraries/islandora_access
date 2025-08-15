@@ -1,0 +1,18 @@
+{
+    "name": "drupal/islandora_access",
+    "description": "Assign administrators to parent items to easily assign editors to islandora objects",
+    "type": "drupal-module",
+    "license": "GPL-2.0+",
+    "homepage": "https://www.drupal.org/project/islandora_access",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/islandora_access"
+    },
+    "authors": [
+        {
+            "name": "Joe Corall",
+            "email": "jjc223@lehigh.edu",
+            "role": "Owner"
+        }
+    ],
+    "require" : {}
+}

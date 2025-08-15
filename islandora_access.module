@@ -5,13 +5,10 @@
  * Contains islandora_access.module.
  */
 
-use Drupal\node\Entity\Node;
-use Drupal\node\NodeInterface;
-
 /**
  * Helper function to get node IDs a user was added to field_administator of.
  */
-function islandora_access_get_admins_nids($uid, &$nids, $parent = FALSE, &$visited = []) {
+function islandora_access_get_admins_nids($uid, &$nids, $parent = FALSE, &$visited = []) : void {
   if ($uid == 0) {
     return;
   }
@@ -24,7 +21,7 @@ function islandora_access_get_admins_nids($uid, &$nids, $parent = FALSE, &$visit
     $visited[$parent] = TRUE;
   }
 
-  $query = $db->select('node__field_administrator', 'a');
+  $query = \Drupal::database()->select('node__field_administrator', 'a');
   $query->innerJoin('node_field_data', 'n', 'n.nid = a.entity_id');
   $query->condition('field_administrator_target_id', $uid);
 
@@ -41,9 +38,8 @@ function islandora_access_get_admins_nids($uid, &$nids, $parent = FALSE, &$visit
 
   $ids = $query->execute()->fetchCol();
   foreach ($ids as $nid) {
-    $node = Node::load($nid);
     $nids[$nid] = $nid;
-    if (islandora_access_node_is_collection($node)) {
+    if (islandora_access_node_is_collection($nid)) {
       islandora_access_get_admins_nids($uid, $nids, $nid, $visited);
     }
   }
@@ -51,23 +47,34 @@ function islandora_access_get_admins_nids($uid, &$nids, $parent = FALSE, &$visit
 
 /**
  * Helper function to detect collections.
+ *
+ * @param int $nid
+ *   The node ID.
+ *
+ * @return bool
+ *   TRUE if the node is a collection, FALSE otherwise.
  */
-function islandora_access_node_is_collection(NodeInterface $node, $includeCompoundObjects = TRUE) : bool {
-  if (!$node->hasField('field_model') || $node->field_model->isEmpty()) {
+function islandora_access_node_is_collection(int $nid, bool $includeCompoundObjects = TRUE) : bool {
+  $query = \Drupal::database()->select('node__field_model', 'nm');
+  $query->innerJoin('taxonomy_term__field_external_uri', 'te', 'te.entity_id = nm.field_model_target_id');
+  $query->fields('te', ['field_external_uri_uri']);
+  $query->condition('nm.entity_id', $nid);
+  $query->condition('nm.deleted', 0);
+  $model_uri = $query->execute()
+    ->fetchField();
+
+  if (!$model_uri) {
     return FALSE;
   }
 
-  if (is_null($node->field_model->entity) || !$node->field_model->entity->hasField('field_external_uri') || $node->field_model->entity->field_external_uri->isEmpty()) {
-    return FALSE;
-  }
-
-  if ($node->field_model->entity->field_external_uri->uri === 'http://purl.org/dc/dcmitype/Collection') {
+  if ($model_uri === 'http://purl.org/dc/dcmitype/Collection') {
     return TRUE;
   }
 
-  if ($includeCompoundObjects && $node->field_model->entity->field_external_uri->uri === 'http://vocab.getty.edu/aat/300242735') {
+  if ($includeCompoundObjects && $model_uri === 'http://vocab.getty.edu/aat/300242735') {
     return TRUE;
   }
 
   return FALSE;
+
 }

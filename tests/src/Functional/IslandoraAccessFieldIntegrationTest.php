@@ -217,12 +217,12 @@ class IslandoraAccessFieldIntegrationTest extends BrowserTestBase {
 
     // Test collection detection.
     $this->assertTrue(
-      islandora_access_node_is_collection($collection),
+      islandora_access_node_is_collection($collection->id()),
       'Node with Collection model should be detected as collection.'
     );
 
     $this->assertFalse(
-      islandora_access_node_is_collection($image),
+      islandora_access_node_is_collection($image->id()),
       'Node with Image model should not be detected as collection.'
     );
   }
@@ -343,7 +343,6 @@ class IslandoraAccessFieldIntegrationTest extends BrowserTestBase {
    * Test a bad field member of doesn't break this code.
    */
   public function testBadReference() {
-    // Create node with multiple administrators.
     $node = Node::create([
       'type' => 'islandora_object',
       'title' => 'Test Object',

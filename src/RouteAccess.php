@@ -21,7 +21,7 @@ class RouteAccess {
 
     // While we're at it, hide the members tab if this isn't a collection.
     $node = self::getRouteNode();
-    $allowed = islandora_access_node_is_collection($node);
+    $allowed = islandora_access_node_is_collection($node->id());
     if (!$allowed) {
       return AccessResult::forbidden();
     }
