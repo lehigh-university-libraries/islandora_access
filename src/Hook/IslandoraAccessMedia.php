@@ -82,6 +82,8 @@ class IslandoraAccessMedia {
       return;
     }
 
+    // Make sure the prepopulate module's edit query parameter is set
+    // when creating new nodes.
     $params = \Drupal::request()->query->all();
     if (!isset($params['edit']['field_media_of']['widget'][0]['target_id']) || !is_numeric($params['edit']['field_media_of']['widget'][0]['target_id'])) {
       $form['#access'] = FALSE;
