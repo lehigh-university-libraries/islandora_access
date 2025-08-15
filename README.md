@@ -8,7 +8,7 @@ Requires a field `field_administrator` attached to a node that points to user en
 
 This module also allows all published nodes to be viewable by anonymous users.
 
-Node administrators are then also able to create, update, and delete media for the node(s) the user is an administator of.
+Node administrators are then also able to create, update, and delete media for the node(s) the user is an administrator of.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ Requires three fields on a node:
 - `field_model` - entity reference to a term entity
   - The term entity then needs `field_external_uri` to identify collection nodes
 - `field_administrator` - entity reference to a user entity
-  - this field is what assigns editors to nodes and their children
+  - This field is what assigns editors to nodes and their children
 
 One optional field on media to also have media access controlled by this module:
 
