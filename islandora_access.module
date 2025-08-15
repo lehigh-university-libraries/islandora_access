@@ -24,13 +24,6 @@ function islandora_access_get_admins_nids($uid, &$nids, $parent = FALSE, &$visit
     $visited[$parent] = TRUE;
   }
 
-  $db = \Drupal::database();
-  $schema = $db->schema();
-  if (!$schema->tableExists('node__field_administrator')) {
-    \Drupal::logger('islandora_access')->error(t('You must have a user entity reference field called field_administator tp use the islandor access module.'));
-    return;
-  }
-
   $query = $db->select('node__field_administrator', 'a');
   $query->innerJoin('node_field_data', 'n', 'n.nid = a.entity_id');
   $query->condition('field_administrator_target_id', $uid);

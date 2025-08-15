@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Contains islandora_access.install.
+ */
+
+use Drupal\islandora_access\Hook\IslandoraAccessRequirements;
+
+/**
+ * Implements hook_requirements().
+ */
+function islandora_access_requirements($phase) {
+  // I guess this is a procedural hook and can't use the Hooks attributes.
+  return IslandoraAccessRequirements::check($phase);
+}
